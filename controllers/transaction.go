@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"gorm.io/gorm"
 
 	"lifedev/shop/database"
@@ -17,26 +18,29 @@ import (
 
 type TransactionController struct {
 	// declare variables
-	Db *gorm.DB
+	Db    *gorm.DB
+	store *session.Store
 }
 
-func InitTransactionController() *TransactionController {
+func InitTransactionController(s *session.Store) *TransactionController {
 	db := database.InitDb()
 	// gorm
 	db.AutoMigrate(&models.Transaction{})
 
-	return &TransactionController{Db: db}
+	return &TransactionController{Db: db, store: s}
 }
 
 // routing
 // GET /transactions
 func (controller *TransactionController) DashboardTransaction(c *fiber.Ctx) error {
 	// load all products
+
 	var transactions []models.Transaction
 	err := models.ReadTransaction(controller.Db, &transactions)
 	if err != nil {
 		return c.SendStatus(500) // http 500 internal server error
 	}
+
 	return c.Render("transaction", fiber.Map{
 		"Title":        "Daftar Produk",
 		"Transactions": transactions,

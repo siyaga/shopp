@@ -25,7 +25,7 @@ func main() {
 	// controllers
 	// helloController := controllers.InitHelloController(store)
 	prodController := controllers.InitProductController()
-	tranController := controllers.InitTransactionController()
+	tranController := controllers.InitTransactionController(store)
 	authController := controllers.InitAuthController(store)
 
 	prod := app.Group("/products")
@@ -40,9 +40,36 @@ func main() {
 	prod.Get("/deleteproduct/:id", prodController.DeleteProduct)
 
 	tran := app.Group("/transactions")
-	tran.Get("/", tranController.DashboardTransaction)
-	tran.Post("/create", tranController.AddPostedTransaction)
-	tran.Get("/delete/:id", tranController.DeleteTransactionById)
+	tran.Get("/", func(c *fiber.Ctx) error {
+		sess, _ := store.Get(c)
+		val := sess.Get("username")
+		if val != nil {
+			return c.Next()
+		}
+
+		return c.Redirect("/login")
+
+	}, tranController.DashboardTransaction)
+	tran.Post("/create", func(c *fiber.Ctx) error {
+		sess, _ := store.Get(c)
+		val := sess.Get("username")
+		if val != nil {
+			return c.Next()
+		}
+
+		return c.Redirect("/login")
+
+	}, tranController.AddPostedTransaction)
+	tran.Get("/delete/:id", func(c *fiber.Ctx) error {
+		sess, _ := store.Get(c)
+		val := sess.Get("username")
+		if val != nil {
+			return c.Next()
+		}
+
+		return c.Redirect("/login")
+
+	}, tranController.DeleteTransactionById)
 
 	app.Get("/login", authController.Login)
 	app.Post("/login", authController.LoginPosted)
