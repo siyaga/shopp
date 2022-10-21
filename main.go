@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/template/html"
 
 	"lifedev/shop/controllers"
@@ -9,7 +10,7 @@ import (
 
 func main() {
 	// session
-	// store := session.New()
+	store := session.New()
 
 	// load template engine
 	engine := html.New("./views", ".html")
@@ -25,7 +26,7 @@ func main() {
 	// helloController := controllers.InitHelloController(store)
 	prodController := controllers.InitProductController()
 	tranController := controllers.InitTransactionController()
-	// authController := controllers.InitAuthController(store)
+	authController := controllers.InitAuthController(store)
 
 	prod := app.Group("/products")
 	prod.Get("/", prodController.HomeProduct)
@@ -43,10 +44,12 @@ func main() {
 	tran.Post("/create", tranController.AddPostedTransaction)
 	tran.Get("/delete/:id", tranController.DeleteTransactionById)
 
-	// app.Get("/login", authController.Login)
-	// app.Post("/login", authController.LoginPosted)
-	// app.Get("/logout", authController.Logout)
-	//app.Get("/profile",authController.Profile)
+	app.Get("/login", authController.Login)
+	app.Post("/login", authController.LoginPosted)
+	app.Get("/register", authController.Register)
+	app.Post("/register", authController.AddPostedRegister)
+	app.Get("/logout", authController.Logout)
+	app.Get("/profile", authController.Profile)
 
 	// app.Use("/profile", func(c *fiber.Ctx) error {
 	// 	sess,_ := store.Get(c)
@@ -58,16 +61,16 @@ func main() {
 	// 	return c.Redirect("/login")
 
 	// })
-	// app.Get("/profile", func(c *fiber.Ctx) error {
-	// 	sess,_ := store.Get(c)
-	// 	val := sess.Get("username")
-	// 	if val != nil {
-	// 		return c.Next()
-	// 	}
+	app.Get("/profile", func(c *fiber.Ctx) error {
+		sess, _ := store.Get(c)
+		val := sess.Get("username")
+		if val != nil {
+			return c.Next()
+		}
 
-	// 	return c.Redirect("/login")
+		return c.Redirect("/login")
 
-	// }, authController.Profile)
+	}, authController.Profile)
 
 	app.Listen(":3000")
 }

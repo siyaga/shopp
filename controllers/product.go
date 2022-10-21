@@ -70,6 +70,21 @@ func (controller *ProductController) AddPostedProduct(c *fiber.Ctx) error {
 	//myform := new(models.Product)
 	var myform models.Product
 
+	// file, errFile := c.FormFile("image")
+	// if errFile != nil {
+	// 	fmt.Println("Error File =", errFile)
+	// }
+	// var filename *string
+	// if file != nil {
+	// 	filename := &file.Filename
+	// 	errSaveFile := c.SaveFile(file, fmt.Sprintf("./public/images/%s", *filename))
+	// 	if errSaveFile != nil {
+	// 		fmt.Println("Fail to store file into public/ikmages directory.")
+	// 	}
+	// } else {
+	// 	fmt.Println("Nothing file to uploading.")
+	// }
+
 	if err := c.BodyParser(&myform); err != nil {
 		return c.Redirect("/products")
 	}
