@@ -8,10 +8,10 @@ import (
 
 type Transaction struct {
 	gorm.Model
-	Id        int    `form:"id" json:"id" validate:"required"`
-	IdProduck int    `form:"idproduck" json:"idproduck" validate:"required"`
-	Name      string `form:"name" json:"name" validate:"required"`
-	// Image       string  `form:"image" json:"image" validate:"required"`
+	Id        int     `form:"id" json:"id" validate:"required"`
+	IdProduck int     `form:"idproduck" json:"idproduck" validate:"required"`
+	Name      string  `form:"name" json:"name" validate:"required"`
+	Image     string  `form:"image" json:"image" validate:"required"`
 	Quantity  int     `form:"quantity" json:"quantity" validate:"required"`
 	Price     float32 `form:"price" json:"price" validate:"required"`
 	Status    string  `form:"status" json:"status" validate:"required"`

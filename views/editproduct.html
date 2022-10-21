@@ -2,7 +2,7 @@
 
 <h1>Edit Produk</h1>
 <br>
-<form method="POST" action="/products/editproduct/{{.Product.Id}}">
+<form method="POST" action="/products/editproduct/{{.Product.Id}}" enctype="multipart/form-data">
 	<div class="mb-3">
 		<label for="name" class="form-label">Nama Product</label>
 		<input type="text" class="form-control" value="{{.Product.Name}}" name="name" id="name" placeholder="Nama">

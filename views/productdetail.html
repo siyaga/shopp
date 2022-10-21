@@ -8,7 +8,7 @@
 			<div>
 				<h1>Nama Product : {{ .Product.Name }}</h1>
 				&emsp;
-				<p class="img-card-1"><img src="/public/images/71654-playstation-5.jpg" style="width:630px;height:360px;" class="rounded mx-auto d-block" alt="{{ .Product.Name }}"></p>
+				<p class="img-card-1"><img src="/public/images/{{ .Product.Image }}" style="width:630px;height:360px;" class="rounded mx-auto d-block" alt="{{ .Product.Name }}"></p>
 				&emsp; &emsp;
 				<div class=" container mb-3">
 					<p><b>Detail Product :</b> {{ .Product.Description }}</p>
@@ -20,7 +20,7 @@
 			
 				<form method="POST" action="/transactions/create" class="mt-4">
 					<input type="hidden" name="idproduck" class="form-control" id="id" value="{{ .id }}"/>
-					<!-- <input type="hidden" name="gambar" class="form-control" id="gambar" value=""/> -->
+					<input type="hidden" name="image" class="form-control" id="image" value="{{ .Image }}"/>
 					<input type="hidden" name="name" class="form-control" id="name" value="{{ .Name }}"/>
 					<input type="hidden" name="quantity" class="form-control" id="judul" value="{{ .Quantity }}"/>
 					<input type="hidden" name="price" class="form-control" id="judul" value="{{ .Price }}"/>

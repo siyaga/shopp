@@ -26,8 +26,8 @@ func CreateUser(db *gorm.DB, newUser *User) (err error) {
 	}
 	return nil
 }
-func ReadUser(db *gorm.DB, users *[]User) (err error) {
-	err = db.Find(users).Error
+func FindByUsername(db *gorm.DB, user *User, username string) (err error) {
+	err = db.Where("username=?", username).First(user).Error
 	if err != nil {
 		return err
 	}

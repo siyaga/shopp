@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -70,27 +71,29 @@ func (controller *ProductController) AddPostedProduct(c *fiber.Ctx) error {
 	//myform := new(models.Product)
 	var myform models.Product
 
-	// file, errFile := c.FormFile("image")
-	// if errFile != nil {
-	// 	fmt.Println("Error File =", errFile)
-	// }
-	// var filename *string
-	// if file != nil {
-	// 	filename := &file.Filename
-	// 	errSaveFile := c.SaveFile(file, fmt.Sprintf("./public/images/%s", *filename))
-	// 	if errSaveFile != nil {
-	// 		fmt.Println("Fail to store file into public/ikmages directory.")
-	// 	}
-	// } else {
-	// 	fmt.Println("Nothing file to uploading.")
-	// }
+	file, errFile := c.FormFile("image")
+	if errFile != nil {
+		fmt.Println("Error File =", errFile)
+	}
+	var filename string = file.Filename
+	if file != nil {
+
+		errSaveFile := c.SaveFile(file, fmt.Sprintf("./public/images/%s", filename))
+		if errSaveFile != nil {
+			fmt.Println("Fail to store file into public/ikmages directory.")
+		}
+	} else {
+		fmt.Println("Nothing file to uploading.")
+	}
 
 	if err := c.BodyParser(&myform); err != nil {
 		return c.Redirect("/products")
 	}
+
+	myform.Image = filename
 	// save product
-	err := models.CreateProduct(controller.Db, &myform)
-	if err != nil {
+	errr := models.CreateProduct(controller.Db, &myform)
+	if errr != nil {
 		return c.Redirect("/products")
 	}
 	// if succeed
@@ -160,7 +163,24 @@ func (controller *ProductController) EditlPostedProduct(c *fiber.Ctx) error {
 	if err := c.BodyParser(&myform); err != nil {
 		return c.Redirect("/products")
 	}
+
+	file, errFile := c.FormFile("image")
+	if errFile != nil {
+		fmt.Println("Error File =", errFile)
+	}
+	var filename string = file.Filename
+	if file != nil {
+
+		errSaveFile := c.SaveFile(file, fmt.Sprintf("./public/images/%s", filename))
+		if errSaveFile != nil {
+			fmt.Println("Fail to store file into public/ikmages directory.")
+		}
+	} else {
+		fmt.Println("Nothing file to uploading.")
+	}
+	myform.Image = filename
 	product.Name = myform.Name
+	product.Image = myform.Image
 	product.Description = myform.Description
 	product.Quantity = myform.Quantity
 	product.Price = myform.Price
